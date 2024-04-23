@@ -79,5 +79,29 @@ public class App {
         // Given a stream of integers, skip first 2 elements, sort values, filter values bigger than hundred and smaller than 10, remove duplicates
         Stream<Integer> intStream = Stream.of(9, 34, 34, 42, 15, 8, 8, 235, 2, 42, 34);
         intStream.skip(2).sorted().filter(x->x>10 && x<100).distinct().forEach(System.out::println);
+    
+    
+        // Map example
+
+        // Example 1: print all dummies using map
+
+        Stream<Dummy<Integer>> dummies = Stream.of(new Dummy<Integer>(9), new Dummy<Integer>(8), new Dummy<Integer>(11),new Dummy<Integer>(10));
+        dummies.map(Dummy::getDummy).forEach(System.out::println);
+        System.out.println();
+
+        
+        // Example 2: map each STring in an array of String of their length
+
+        Stream<String> vegStream = Stream.of("carrot", "onion", "pumpkin");
+        vegStream.map(String::length).distinct().sorted().forEach(System.out::println);
+
+        
+        // Example 3: with doble mapping
+        Stream<Dummy<String>> anotherDummyStream = dummyList.stream();
+        anotherDummyStream.map(Dummy::getDummy).mapToInt(String::length).forEach(System.out::println);
+        System.out.println();
+
+        Stream<String> StringStream = Stream.of("mother", "mother", "daughter", "father", "son", "daughter", "hi", "onion", "glass");
+        StringStream.filter(a -> a.length() > 4 ).sorted((a,b) -> (b.length()-a.length())).distinct().mapToInt(String::length).forEach(System.out::println);
     }
 }
