@@ -74,8 +74,10 @@ public class App {
 
         Stream<String> familyStream = Stream.of("mother", "father", "son", "niece", "uncle", "grandfather", "grandmother");
         familyStream.filter(x->x.contains("mn")).forEach(System.out::println);
-    
-    
-    
+        
+        System.out.println("******************");
+        // Given a stream of integers, skip first 2 elements, sort values, filter values bigger than hundred and smaller than 10, remove duplicates
+        Stream<Integer> intStream = Stream.of(9, 34, 34, 42, 15, 8, 8, 235, 2, 42, 34);
+        intStream.skip(2).sorted().filter(x->x>10 && x<100).distinct().forEach(System.out::println);
     }
 }
