@@ -1,11 +1,13 @@
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.IntSummaryStatistics;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.function.Function;
@@ -222,9 +224,54 @@ public class App {
             return sb.toString();
         }).distinct().forEach(System.out::println); // the and the are considered different words because it's case sensitive
 
+        System.out.println("*******************************************************");
 
+        // Examples forEach and integers
+
+        Stream<Double> someNumbers = Stream.generate(Math::random);
+        //someNumbers.limit(5).map(x->String.valueOf((int)(x*10)) + " ").forEach(System.out::print);
+
+        // alternative way 
+
+        someNumbers.limit(5).forEach(x->System.out.print((int)(x*10) + " "));
 
         System.out.println("*******************************************************");
+
+        // Example findAny - get first Element from the stream. IT'S TERMINAL 
+        Stream<String> againStringStream = Stream.of("Panda", "Jujutsu", "Kyoto", "Sunglasses");
+        Optional<String> firstString = againStringStream.findAny();
+        System.out.println(firstString.orElse("Empty"));
+
+        System.out.println("*******************************************************");
+
+        // Example findFirst - get first according to sorting of elements 
+        Stream<String> againStringStream2= Stream.of("Panda", "Jujutsu", "Kyoto", "Sunglasses");
+        Optional<String> firstString2 = againStringStream2.findFirst();
+        System.out.println(firstString2.orElse("Empty"));
+
+        System.out.println("*******************************************************");
+
+        // Example min or max according to given comparator get the longest string in the stream
+        Stream<String> againStringStream3 = Stream.of("Panda", "Jujutsu", "Kyoto", "Sunglasses");
+        Optional<String> s = againStringStream3.min(Comparator.comparingInt(String::length));
+        System.out.println(s.orElse("Empty!"));
+
+        // Example with count ( count how many people have Meditating as an hobby)
+
+        Stream<Person> streamPersone = Arrays.stream(persone);
+        long countMeditating = streamPersone.filter((persona) -> {
+            for (String stringa : persona.getHobbies()) {
+                if (stringa.equals("Meditating")) {
+                    return true;
+                }
+            };
+            return false;
+        }).count();
+
+        System.out.println(countMeditating);
+        System.out.println("*******************************************************");
+
+
         // Example 1: a stream of numbers to reduce in the sum of even number
         
         List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
