@@ -255,7 +255,7 @@ public class App {
         Stream<String> againStringStream3 = Stream.of("Panda", "Jujutsu", "Kyoto", "Sunglasses");
         Optional<String> s = againStringStream3.min(Comparator.comparingInt(String::length));
         System.out.println(s.orElse("Empty!"));
-        
+
         System.out.println("*******************************************************");
 
         // Example with count ( count how many people have Meditating as an hobby)
@@ -275,6 +275,28 @@ public class App {
         System.out.println(countMeditating);
         System.out.println(countMeditating2);
         System.out.println("*******************************************************");
+
+        //Example anyMatch (find if at least one person has reading as an hobby)
+
+        boolean flagReading = Arrays.stream(persone).map(Person::getHobbies).flatMap(Collection::stream).anyMatch(h->h.equals("Reading"));
+        System.out.println("Does somebody like reading? " + flagReading);
+
+        // Example allMatch (check if every Person has at least two hobbies)
+
+        boolean twoHobbies = Arrays.stream(persone).allMatch(p -> p.getHobbies().size()> 1);
+        System.out.println("Does everybody have at least 2 hobbies? " + twoHobbies);
+
+        // Example noneMatch (in a stream of strings check whether they all do not contain numbers)
+        String[] arrString = {"hola", "ciao"};
+        boolean noNumbers = Arrays.stream(arrString).noneMatch(stringa -> {
+            for (int i=0; i<stringa.length(); i++) {
+                if (Character.isDigit(stringa.charAt(i))) {
+                    return true;
+                }
+            }
+            return false;
+        });
+        System.out.println(noNumbers);
 
 
         // Example 1: a stream of numbers to reduce in the sum of even number
