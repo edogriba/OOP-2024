@@ -255,6 +255,8 @@ public class App {
         Stream<String> againStringStream3 = Stream.of("Panda", "Jujutsu", "Kyoto", "Sunglasses");
         Optional<String> s = againStringStream3.min(Comparator.comparingInt(String::length));
         System.out.println(s.orElse("Empty!"));
+        
+        System.out.println("*******************************************************");
 
         // Example with count ( count how many people have Meditating as an hobby)
 
@@ -267,8 +269,11 @@ public class App {
             };
             return false;
         }).count();
-
+        //professor
+        long countMeditating2 = Arrays.stream(persone).map(Person::getHobbies).flatMap(Collection::stream).filter(x->x.equals("Meditating")).count();
+        
         System.out.println(countMeditating);
+        System.out.println(countMeditating2);
         System.out.println("*******************************************************");
 
 
