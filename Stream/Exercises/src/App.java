@@ -25,9 +25,7 @@ public class App {
         public T getDummy() {
             return dummyValue;
         }
-    }
-
-    
+    }  
     public static void main(String[] args) throws Exception {
         // Method 1: using arrays
         String [] animals = {
@@ -164,18 +162,10 @@ public class App {
 
         System.out.println("*******************************************************");
         
-
-
-        // Example 1: class Person contains name, age o fthe prson and a list of hobbies using flatmap dìfind all the unique hobbies
-
-
-
         class Person {
             private String name;
             private int age;
             private List<String>hobbies;
-
-
             public Person(int age) {
                 this.age = age;
             }
@@ -194,6 +184,8 @@ public class App {
                 return this.name;
             }
         }
+
+        // Example 1: class Person contains name, age o fthe prson and a list of hobbies using flatmap dìfind all the unique hobbies
 
         Person[] persone = {
             new Person("Alice", 37, Arrays.asList("Running","Meditating")),
@@ -399,6 +391,9 @@ public class App {
         System.out.println("*******************************************************");
         
         // Try it out-group according to hobby --we need to
+
+        Map <String, List<String>> mappa = Arrays.stream(arrayOfPersons).flatMap(person -> person.getHobbies().stream().map( hobby -> Map.entry(hobby, person.getName()))).collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
+        System.out.println(mappa);
 
         // partition by example: Partition by having singing as an hobby
         Map<Boolean, List<String>> personsSinging = Arrays.stream(arrayOfPersons).collect(Collectors.partitioningBy(p-> p.getHobbies().contains("Singing"), Collectors.collectingAndThen(Collectors.mapping(Persona::getName, Collectors.toList()), LinkedList::new)));
