@@ -14,10 +14,18 @@ import java.io.Serializable;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class App {
@@ -165,6 +173,96 @@ public class App {
         catch (IOException | ClassNotFoundException eio) {
             eio.printStackTrace();
         }
+        // Example of using FIles for reading a file -> this is the easiest way to read a file (like in Pyhton) -> all lines together
 
+        Path filePath = Path.of("example.txt"); // this is a relative path 
+
+        try {
+            List<String> lines = Files.readAllLines(filePath);
+            System.out.println("Lines read from the file:");
+            lines.forEach(System.out::println);  // easier and faster       
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        // We want to get all the lines of the file into a stream and perform some operations on them 
+
+        try {
+
+            // files reading with streams very likely at the exam
+            // count how many occurrences wee have in the file for each word
+            Map<String, Long> occurrences = Files.lines(filePath).flatMap(line -> Stream.of(line.split("\\s+"))).collect(Collectors.groupingBy(String::toLowerCase, Collectors.counting())); // this will return a stream of lines
+            System.out.println(occurrences);
+
+            Path outFilepath = Path.of("word_counts.txt");
+
+            StringBuilder content = new StringBuilder();
+            for (Map.Entry<String, Long> entry : occurrences.entrySet()) {
+                content.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");           
+            }
+            Files.write(outFilepath, content.toString().getBytes());
+        }
+        catch (IOException ioe) { 
+            ioe.printStackTrace();
+        }
+
+        // String tokenizer example 
+        System.out.println("\nThis is an example of StringTokenizer:");
+        String sentence = "Hello world! This is a sample sentence";
+        StringTokenizer tokenizer = new StringTokenizer(sentence, " ");
+
+        // Iterate through tokens
+
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            System.out.println(token);
+        }
+
+        //Try it out
+        Path peopleFilePath =Path.of("People.txt"); // Relative filepath in this case because the file is in the same directory of this file
+        try {
+            List<Person> people = Files.lines(peopleFilePath).map(line->{
+                String []  parts = line.split(", ");
+                String name =parts[0];
+                int age = Integer.parseInt(parts[1]);
+                List<String> hobbies = Arrays.asList(parts[2].split(" "));
+                return new Person(name, age, hobbies);
+            }).toList();
+            people.forEach(p->System.out.println(p.getName()));
+
+            // most popular hobby --> very similar to what we can get at the exam
+            Map.Entry<String, Long> mostPopularHobby =people.stream().
+                                                            flatMap(p->p.getHobbies()
+                                                            .stream())
+                                                            .collect(Collectors.groupingBy(hobby->hobby, Collectors.counting()))
+                                                            .entrySet()
+                                                            .stream()
+                                                            .max(Map.Entry.comparingByValue())
+                                                            .orElse(Map.entry("", 0L));
+        
+            // people with that hobby
+
+            List<Person> peopleWithMostPopularHobby = people.stream()
+                                                            .filter(person-> person.getHobbies().contains(mostPopularHobby.getKey()))
+                                                            .collect(Collectors.toList());
+            
+            // oldest person having that hobby
+
+            Optional <Person> oldestPerson = peopleWithMostPopularHobby.stream().max(Comparator.comparing(Person::getAge));
+
+            // Youngest person having that hobby
+
+            Optional <Person> youngestPerson = peopleWithMostPopularHobby.stream().min(Comparator.comparing(Person::getAge));
+
+            System.out.println("People analysis");
+            System.out.println("Most popular hobby: " + mostPopularHobby.getKey());
+            oldestPerson.ifPresent(p->System.out.println("Oldest person " + p.getName()));
+            youngestPerson.ifPresent(p->System.out.println("Youngest person "+ p.getName()));
+        
+            }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 }
