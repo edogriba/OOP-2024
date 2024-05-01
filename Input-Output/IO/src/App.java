@@ -4,17 +4,24 @@ import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 
 public class App {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException  {
         // Example with StringWriter and StringReader
         try (StringWriter stringWriter = new StringWriter(); PrintWriter printWriter= new PrintWriter(stringWriter)) {
             // Writing data to StringWriter
@@ -114,5 +121,50 @@ public class App {
         catch (IOException eio) {
             eio.printStackTrace();
         }
+
+        // Serialization
+
+        class Person implements Serializable{
+            private String name;
+            private int age;
+            private List<String> hobbies; 
+            public Person(String name, int age, List<String> hobbies) {
+                this.name = name;
+                this.age = age;
+                this.hobbies = hobbies;
+            }
+            public int getAge() {
+                return this.age;
+            }
+            public String getName() {
+                return this.name;
+            }
+            public List<String> getHobbies() {
+                return this.hobbies;
+            }
+        }
+
+        List<Person> somePeople = Arrays.asList(new Person("Gloria", 40, Arrays.asList("Singing", "Cooking")),
+                                    new Person("Phil", 42, Arrays.asList("Running", "Do magic tricks")), 
+                                    new Person("Cam", 40, Arrays.asList("Singing")),
+                                    new Person("Manny", 13, Arrays.asList("Poetry", "Accounting")), 
+                                    new Person("Luke", 13, Collections.emptyList())
+                                    );
+        try (ObjectOutputStream serializer = new ObjectOutputStream(new FileOutputStream("people.ser"))) {
+            serializer.writeObject(somePeople);
+        }
+        catch (IOException eio) {
+            eio.printStackTrace();
+
+        }
+        List<Person> peopleList = new ArrayList();
+        try (ObjectInputStream deserializer = new ObjectInputStream(new FileInputStream("people.ser"))) {
+            peopleList = (List<Person>)deserializer.readObject();
+            peopleList.forEach(p->System.out.println(p.getName()));
+        }
+        catch (IOException | ClassNotFoundException eio) {
+            eio.printStackTrace();
+        }
+
     }
 }
