@@ -21,14 +21,14 @@ public class App {
         stringList.add("are");
         stringList.add("you");
 
-        String [] txta = {"hello", "how", "is", "it", "going", "hope", "it", "is", "going", "well", "isn't", "it"};
+        String [] txta = {"hello", "", "is", "it", "going", "hope", "it", "is", "going", "well", "isn't", "it"};
         List<Student> studentList = new LinkedList<>();
         
-        studentList.add(new Student("Marco", 4, Arrays.asList(new Course("A1"), new Course("A2"))));
-        studentList.add(new Student("Luca", 35, Collections.emptyList()));
-        studentList.add(new Student("Francesco", 72, Arrays.asList(new Course("F1"), new Course("ASD"))));
-        studentList.add(new Student("Federica", 18, Collections.emptyList()));
-        studentList.add(new Student("Beatrice", 72, Arrays.asList(new Course("IAW"))));
+        studentList.add(new Student("Marco", 4, Arrays.asList(new Course("A1"), new Course("A2")), Optional.of(12)));
+        studentList.add(new Student("Luca", 35, Collections.emptyList(), Optional.of(0)));
+        studentList.add(new Student("Francesco", 72, Arrays.asList(new Course("F1"), new Course("ASD")), Optional.of(100)));
+        studentList.add(new Student("Federica", 18, Collections.emptyList(), Optional.of(45)));
+        studentList.add(new Student("Beatrice", 72, Arrays.asList(new Course("IAW")), Optional.of(23)));
 
         // Try to create and experiment with streams
         studentList.stream().map(Student::getAge).forEach(System.out::println);
@@ -146,8 +146,38 @@ public class App {
         // Counting
 
         Map<String, Long> frequency = Stream.of(txta).collect(groupingBy(w->w, counting()));
-        for (String key : frequency.keySet()) {
-            System.out.println( key + ": " + frequency.get(key));
+        for (String s : frequency.keySet()) {
+            System.out.println( s + ": " + frequency.get(s));
         }
+        
+        // I wanna swap String and Long (this throws an error because you cannot create a map with duplicated keys)
+        /*
+        Map<Long, String> numbersFrequency = Stream.of(txta).collect(groupingBy(w->w, counting())).entrySet().stream().collect(toMap(Map.Entry::getValue, Map.Entry::getKey));
+        for (Long s : numbersFrequency.keySet()) {
+            System.out.println( s + ": " + numbersFrequency.get(s));
+        }*/
+        System.out.println("*******************************");
+        // CollectingAndThen
+        List<String> longestWords = Stream.of(txta).distinct().collect(collectingAndThen(groupingBy(String::length,()->new TreeMap<>(reverseOrder()), toList()), m -> m.entrySet().stream().limit(3).flatMap(e->e.getValue().stream()).collect(toList())));
+        for ( String s: longestWords) {
+            System.out.println(s);
+        }
+
+        //Map<String, Optional
+
+        // I wanna create a Map<Long, List<String>>
+        System.out.println("*******************************");
+
+        Map <Student, Long> studentsAge = studentList.stream().collect(groupingBy(s->s, counting()));
+        for (Student s : studentsAge.keySet()) {
+            System.out.println(s + ": " + studentsAge.get(s));
+        }
+        /* for (Long l : frequencyListMap.keySet()) {
+            System.out.println(l + ": ");
+            for ( String s: frequencyListMap.get(l)) {
+                System.out.println(s);
+            }
+        }*/
+        
     }
 }
