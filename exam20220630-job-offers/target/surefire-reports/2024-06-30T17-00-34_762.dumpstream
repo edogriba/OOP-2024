@@ -1,0 +1,6 @@
+# Created at 2024-06-30T17:00:34.763
+/bin/sh: -c: line 0: syntax error near unexpected token `)'
+
+# Created at 2024-06-30T17:00:34.763
+/bin/sh: -c: line 0: `cd "/Users/edogriba/Desktop/PoliTO/III ANNO II SEMESTRE ('23-'24)/OOP/TEMI_ESAME_RIFATTI/exam20220630-job-offers-1" && /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/java -jar '/Users/edogriba/Desktop/PoliTO/III ANNO II SEMESTRE (\'23-\'24)/OOP/TEMI_ESAME_RIFATTI/exam20220630-job-offers-1/target/surefire/surefirebooter13422301434674287580.jar' '/Users/edogriba/Desktop/PoliTO/III ANNO II SEMESTRE (\'23-\'24)/OOP/TEMI_ESAME_RIFATTI/exam20220630-job-offers-1/target/surefire' 2024-06-30T17-00-34_672-jvmRun1 surefire5606661727597602692tmp surefire_02984057042661243546tmp'
+
